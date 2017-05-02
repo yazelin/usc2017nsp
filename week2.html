@@ -51,17 +51,25 @@
 					<li>開啟 工具/NuGet封裝管理員/套件管理器主控台</li>
 					<li>於套件管理器主控台貼上安裝指令:Install-Package M2Mqtt</li>
 				</ul>
+				<h3>介面設計參考</h3>
+				<p><img src="./images/formExample.png"><br/>
+				介面設計參考圖</p>
 				<h3>訂閱者程式設計</h3>
 				<ul>
-					<li>連線到Broker(mosquitto)</li>
-					<li>訂閱主題</li>
-					<li>當收到主題後的對應動作</li>
+					<li>連線到Broker(mosquitto)<br/>
+					在程式執行時自動連線至MQTT Server(也可設計成輸入IP後按下按鈕連接)</li>
+					<li>訂閱主題<br/>
+					輸入主題名稱後按下訂閱按鈕進行訂閱</li>
+					<li>當收到主題後的對應動作<br/>
+					收到所訂閱的主題內容時顯示在內容文字框內</li>
 					<li>當關閉程式時中斷連線</li>
 				</ul>
 				<h3>發佈者程式設計</h3>	
 				<ul>
-					<li>連線到Broker(mosquitto)</li>
-					<li>發送主題及內容</li>
+					<li>連線到Broker(mosquitto)<br/>
+					在程式執行時自動連線至MQTT Server(也可設計成輸入IP後按下按鈕連接)</li>
+					<li>發送主題及內容<br/>
+					輸入要發佈的主題名稱及內容後按發佈按鈕進行發佈</li>
 					<li>當關閉程式時中斷連線</li>
 				</ul>
 				<h3>備註</h3>
