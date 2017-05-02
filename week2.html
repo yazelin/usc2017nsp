@@ -66,10 +66,14 @@ using uPLibrary.Networking.M2Mqtt.Messages;</code></pre>
 				<h3>訂閱者程式設計</h3>
 				<ul>
 					<li>連線到Broker(mosquitto)<br/>
-<pre><code data-language="csharp">client = new MqttClient("localhost");//MQTTServer在本機
-client.MqttMsgPublishReceived += client_MqttMsgPublishReceived;//當接收到訊息時處理函式
-clientId = Guid.NewGuid().ToString();//取得唯一碼
-client.Connect(clientId);//建立連線</code></pre>
+<pre><code data-language="csharp">//當視窗載入時觸發
+private void Form1_Load(object sender, EventArgs e)
+{
+	client = new MqttClient("localhost");//MQTTServer在本機
+	client.MqttMsgPublishReceived += client_MqttMsgPublishReceived;//當接收到訊息時處理函式
+	clientId = Guid.NewGuid().ToString();//取得唯一碼
+	client.Connect(clientId);//建立連線
+}</code></pre>
 					在程式執行時自動連線至MQTT Server(也可設計成輸入IP後按下按鈕連接)</li>
 					<li>訂閱主題<br/>
 <pre><code data-language="csharp">//按下訂閱按鈕時觸發
