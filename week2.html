@@ -66,7 +66,14 @@ using uPLibrary.Networking.M2Mqtt.Messages;</code></pre>
 				<h3>訂閱者程式設計</h3>
 				<ul>
 					<li>連線到Broker(mosquitto)<br/>
-<pre><code data-language="csharp">//當視窗載入時觸發
+<pre><code data-language="csharp">//在public partial class Form1 : Form { } 中加入下面3個宣告
+delegate void SetTextCallback(string text);//用來更新UIText 的Callback
+
+MqttClient client;//MqttClient
+string clientId;//連線時所用的ClientID
+
+
+//當視窗載入時觸發
 private void Form1_Load(object sender, EventArgs e)
 {
 	client = new MqttClient("localhost");//MQTTServer在本機
