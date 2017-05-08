@@ -185,19 +185,19 @@ void loop(){
 		Serial.print("Humidity : ");
 		Serial.println(DhtSensor.humidity);
 
-		sprintf(msg ,"{\"Humidity\"=%4d}" ,DhtSensor.humidity);
+		sprintf(msg ,"{\"Humidity\":%4d}" ,DhtSensor.humidity);
 		MqttClient.publish("Sensor",msg);
 	  
 		Serial.print("Temperature : ");
 		Serial.println(DhtSensor.temperature);
 		
-		sprintf(msg ,"{\"Temperature\"=%4d}" ,DhtSensor.temperature);
+		sprintf(msg ,"{\"Temperature\":%4d}" ,DhtSensor.temperature);
 		MqttClient.publish("Sensor",msg);
 		
 		Serial.print("Pressure : ");
 		Serial.println(PsSensor);
 		
-		sprintf(msg ,"{\"Pressure\"=%4d}" ,PsSensor);
+		sprintf(msg ,"{\"Pressure\":%4d}" ,PsSensor);
 		MqttClient.publish("Sensor",msg);
 		
 		//	Test output
