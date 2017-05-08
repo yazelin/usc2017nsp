@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="chrome=1">
+		<title>Usc2017nsp by yazelin</title>
+
+		<link rel="stylesheet" href="stylesheets/styles.css">
+		<link rel="stylesheet" href="stylesheets/github-light.css">
+		<link rel="stylesheet" href="stylesheets/usc2017nsp.css">
+		<script src="javascripts/scale.fix.js"></script>
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+		<!--[if lt IE 9]>
+		<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+	</head>
+	<body>
+		<div class="wrapper">
+			<header>
+				<h1 class="header"><a href="./index.html">Usc2017nsp</a></h1>
+				<p class="header">實踐大學聯網感測實作</p>
+
+				開發環境
+				<ul>
+					<li class="download"><a class="buttons" href="https://www.arduino.cc/en/main/software">Arduino</a></li>
+					<li class="download"><a class="buttons" href="http://www.eclipse.org/downloads/download.php?file=/mosquitto/binary/win32/mosquitto-1.4.11-install-win32.exe">mosquitto</a></li>
+					<li class="download"><a class="buttons" href="http://slproweb.com/download/Win32OpenSSL_Light-1_0_2k.exe">Win32OpenSSL</a></li>
+					<li class="download"><a class="buttons" href="ftp://sources.redhat.com/pub/pthreads-win32/dll-latest/dll/x86/pthreadVC2.dll">pthreadVC2</a></li>
+					<li class="download"><a class="buttons" href="https://chrome.google.com/webstore/detail/mqttlens/hemojaaeigabkbcookmlgmdigohjobjm?hl=zh-TW">mqttlens</a></li>
+					<li class="download"><a class="buttons" href="./share/library.zip">Arduino library</a></li>
+					
+					<li><a class="buttons github" href="https://github.com/yazelin/usc2017nsp">View On GitHub</a></li>
+				</ul>
+
+				<p class="header">This project is maintained by <a class="header name" href="https://github.com/yazelin">yazelin</a></p>
+			</header>
+			<section>
+				<h3><a href="./week1.html">第 04 週 (05/31) Arduino Ethernet Shield實際連線到Server-1 (3)</a></h3>
+					<blockquote class="blockquote">
+					積土成山，風雨興焉；積水成淵，蛟龍生焉；積善成德，而神明自得，聖心備焉。故不積蹞步，無以至千里；不積小流，無以成江海。騏驥一躍，不能十步；駑馬十駕，功在不舍。
+					</blockquote>				
+				<ul>
+					<li>Ethernet與PubSubClient函式的使用</li>
+					<li>Ethernet程式設計</li>
+					<li>PubSubClient程式設計</li>
+					<li>功能測試</li>
+				</ul>
+				
+				<h3>Ethernet與PubSubClient函式的使用</h3>
+				<ul>
+					<li>在程式碼一開始時載入SPI.h、Ethernet.h、PubSubClient.h</li>
+					<li>在程式碼中新增callback()並實作功能</li>
+				</ul>
+				<h3>Ethernet程式設計</h3>
+				<ul>
+					<li>新增變數存放MAC位址與IP資料</li>
+					<li>程式初始化時設定Ethernet Shield連線時所使用的MAC與IP(剛剛新增的變數)</li>
+					<li>以localIP()功能顯示Ethernet Shield所取得的IP</li>
+				</ul>
+				<h3>PubSubClient程式設計</h3>	
+				<ul>
+					<li>新增變數存放MQTT Server IP資料</li>
+					<li>程式初始化時設定目標Server的IP與Port</li>
+					<li>主程式中判斷若連線成功，就向MQTT Server傳送Sensor的資料</li>
+				</ul>
+				<h3>功能測試</h3>
+				<ul>
+					<li>開啟mosquitto接收來自Arduino的訊息</li>
+					<li>開啟MQTTLens確認Arduino的訊息是否正確傳到Server上</li>
+				</ul>
+				<h3>備註</h3>
+				<p>
+					<ul>
+						<li>參考範例<a href="./share/Etherduino.zip">Etherduino.zip</a></li>
+					</ul>
+				</p>
+			</section>
+			<footer>
+				<p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></ul>
+			</footer>
+		</div>
+		<!--[if !IE]><script>fixScale(document);</script><![endif]-->
+			
+	</body>
+</html>
