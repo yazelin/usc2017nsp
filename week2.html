@@ -7,13 +7,8 @@
 
 		<link rel="stylesheet" href="stylesheets/styles.css">
 		<link rel="stylesheet" href="stylesheets/github-light.css">
-		<script src="javascripts/scale.fix.js"></script>
-		
-		<link rel="stylesheet" type="text/css" href="stylesheets/monokai.css" media="screen">
-		<script src="javascripts/rainbow-custom.min.js"></script>
-		<script src="javascripts/csharp.js"></script>
-
 		<link rel="stylesheet" href="stylesheets/usc2017nsp.css">
+		<script src="javascripts/scale.fix.js"></script>
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 		<!--[if lt IE 9]>
 		<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -32,6 +27,7 @@
 					<li class="download"><a class="buttons" href="http://slproweb.com/download/Win32OpenSSL_Light-1_0_2k.exe">Win32OpenSSL</a></li>
 					<li class="download"><a class="buttons" href="ftp://sources.redhat.com/pub/pthreads-win32/dll-latest/dll/x86/pthreadVC2.dll">pthreadVC2</a></li>
 					<li class="download"><a class="buttons" href="https://chrome.google.com/webstore/detail/mqttlens/hemojaaeigabkbcookmlgmdigohjobjm?hl=zh-TW">mqttlens</a></li>
+					<li class="download"><a class="buttons" href="./share/library.zip">Arduino library</a></li>
 					
 					<li><a class="buttons github" href="https://github.com/yazelin/usc2017nsp">View On GitHub</a></li>
 				</ul>
@@ -56,111 +52,18 @@
 					<li>開啟 工具/NuGet封裝管理員/套件管理器主控台</li>
 					<li>於套件管理器主控台貼上安裝指令:Install-Package M2Mqtt</li>
 				</ul>
-				<h3>介面設計參考</h3>
-				<p><img src="./images/formExample.png"><br/>
-				介面設計參考圖</p>
-				<h3>using M2Mqtt 函式庫</h3>
-<pre><code data-language="csharp">// including the M2Mqtt Library
-using uPLibrary.Networking.M2Mqtt;
-using uPLibrary.Networking.M2Mqtt.Messages;</code></pre>
 				<h3>訂閱者程式設計</h3>
 				<ul>
-					<li>連線到Broker(mosquitto)<br/>
-<pre><code data-language="csharp">//在public partial class Form1 : Form { } 中加入下面3個宣告
-delegate void SetTextCallback(string text);//用來更新UIText 的Callback
-
-MqttClient client;//MqttClient
-string clientId;//連線時所用的ClientID
-
-
-//當視窗載入時觸發
-private void Form1_Load(object sender, EventArgs e)
-{
-	client = new MqttClient("localhost");//MQTTServer在本機
-	client.MqttMsgPublishReceived += client_MqttMsgPublishReceived;//當接收到訊息時處理函式
-	clientId = Guid.NewGuid().ToString();//取得唯一碼
-	client.Connect(clientId);//建立連線
-}</code></pre>
-					在程式執行時自動連線至MQTT Server(也可設計成輸入IP後按下按鈕連接)</li>
-					<li>訂閱主題<br/>
-<pre><code data-language="csharp">//按下訂閱按鈕時觸發
-private void btnSubscribe_Click(object sender, EventArgs e)
-{	//若有輸入訂閱主題
-	if (txtTopicSubscribe.Text != "")
-	{
-		//自訂完整主題名稱
-		string Topic = "IoT/" + txtTopicSubscribe.Text + "/test";
-
-		//設定主題及傳送品質 0 ( 0, 1, 2 )
-		client.Subscribe(new string[] { Topic }, new byte[] { 0 });   // we need arrays as parameters because we can subscribe to different topics with one call
-		//清空接收文字框
-		SetText("");
-	}
-	else
-	{
-		MessageBox.Show("必需輸入訂閱主題!");
-	}
-}</code></pre>
-					輸入主題名稱後按下訂閱按鈕進行訂閱</li>
-					<li>當收到主題後的對應動作<br/>
-<pre><code data-language="csharp">// this code runs when a message was received
-void client_MqttMsgPublishReceived(object sender, MqttMsgPublishEventArgs e)
-{
-	//收到的訊息內容以UTF8編碼
-	string ReceivedMessage = Encoding.UTF8.GetString(e.Message);
-
-	// we need this construction because the receiving code in the library and the UI with textbox run on different threads
-	//將訊息寫進接收訊息框內，但因為MQTT接收的執行緒與UI執行緒不同，我們需要呼叫自訂的SetText函式做些處理
-	SetText(ReceivedMessage);
-}
-//當不同執行緒在UI執行緒上需要更新數值時的處理
-private void SetText(string text)
-{
-	// we need this construction because the receiving code in the library and the UI with textbox run on different threads
-	if (this.RecText.InvokeRequired)
-	{	//如果需要Invoke
-		//設定CallBack,Invoke
-		SetTextCallback d = new SetTextCallback(SetText);
-		this.Invoke(d, new object[] { text });
-	}
-	else
-	{
-		//若不需要Invoke直接設定其值
-		this.RecText.Text = text;
-	}
-}</code></pre>
-					收到所訂閱的主題內容時顯示在內容文字框內</li>
-					<li>當關閉程式時中斷連線
-<pre><code data-language="csharp">//檔視窗關閉時
-private void Form1_FormClosing(object sender, FormClosingEventArgs e)
-{
-	client.Disconnect();//中斷連線
-}</code></pre></li>
+					<li>連線到Broker(mosquitto)</li>
+					<li>訂閱主題</li>
+					<li>當收到主題後的對應動作</li>
+					<li>當關閉程式時中斷連線</li>
 				</ul>
 				<h3>發佈者程式設計</h3>	
 				<ul>
-					<li>連線到Broker(mosquitto)(同訂閱者)<br/>
-					在程式執行時自動連線至MQTT Server(也可設計成輸入IP後按下按鈕連接)</li>
-					<li>發送主題及內容<br/>
-<pre><code data-language="csharp">//按下發佈按鈕時觸發
-private void btnPublish_Click(object sender, EventArgs e)
-{
-	//若有輸入發佈主題
-	if (txtTopicPublish.Text != "")
-	{
-		//設定完整的發佈路徑
-		string Topic = "IoT/" + txtTopicPublish.Text + "/test";
-
-		//發佈主題、內容及設定傳送品質 QoS 0 ( 0, 1, 2 )
-		client.Publish(Topic, Encoding.UTF8.GetBytes(txtPublish.Text), MqttMsgBase.QOS_LEVEL_AT_MOST_ONCE, true);
-	}
-	else
-	{
-		MessageBox.Show("必需輸入發佈主題!");
-	}
-}</code></pre>
-					輸入要發佈的主題名稱及內容後按發佈按鈕進行發佈</li>
-					<li>當關閉程式時中斷連線(同訂閱者)</li>
+					<li>連線到Broker(mosquitto)</li>
+					<li>發送主題及內容</li>
+					<li>當關閉程式時中斷連線</li>
 				</ul>
 				<h3>備註</h3>
 				<p>
