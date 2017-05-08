@@ -7,8 +7,13 @@
 
 		<link rel="stylesheet" href="stylesheets/styles.css">
 		<link rel="stylesheet" href="stylesheets/github-light.css">
-		<link rel="stylesheet" href="stylesheets/usc2017nsp.css">
 		<script src="javascripts/scale.fix.js"></script>
+		
+		<link rel="stylesheet" type="text/css" href="stylesheets/monokai.css" media="screen">
+		<script src="javascripts/rainbow-custom.min.js"></script>
+		<script src="javascripts/csharp.js"></script>
+
+		<link rel="stylesheet" href="stylesheets/usc2017nsp.css">
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 		<!--[if lt IE 9]>
 		<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -49,19 +54,166 @@
 				<h3>Ethernet與PubSubClient函式的使用</h3>
 				<ul>
 					<li>在程式碼一開始時載入SPI.h、Ethernet.h、PubSubClient.h</li>
+					<pre><code data-language="csharp">// including the library
+#include&lt;SPI.h&gt;
+#include&lt;Ethernet.h&gt;
+#include&lt;PubSubClient.h&gt;
+#include&lt;dht11.h&gt;
+
+//	Module variable
+dht11	DhtSensor;
+int	PsSensor;</code></pre>
 					<li>在程式碼中新增callback()並實作功能</li>
+					<pre><code data-language="csharp">//  Callback function
+void	callback(char* topic, byte* payload, unsigned int length){
+	Serial.print("Message arrived [");
+	Serial.print(topic);
+	Serial.print("] ");
+	for (int i=0;i&lt;length;i++){
+		Serial.print((char)payload[i]);
+	}
+	Serial.println();
+}</code></pre>
 				</ul>
 				<h3>Ethernet程式設計</h3>
 				<ul>
 					<li>新增變數存放MAC位址與IP資料</li>
+					<pre><code data-language="csharp">// including the library
+#include&lt;SPI.h&gt;
+#include&lt;Ethernet.h&gt;
+#include&lt;PubSubClient.h&gt;
+#include&lt;dht11.h&gt;
+
+//	Ethernet variable
+byte	Mac[] = {0xDE ,0xAD ,0xBE ,0xEF ,0xFE ,0xED};
+byte	Ip[] = {192 ,168 ,1 ,200};
+EthernetClient  client;
+
+//	Module variable
+dht11	DhtSensor;
+int	PsSensor;</code></pre>
 					<li>程式初始化時設定Ethernet Shield連線時所使用的MAC與IP(剛剛新增的變數)</li>
+					<pre><code data-language="csharp">// initial
+void setup(){
+	//	Serial Baudrate
+	Serial.begin(115200);
+	
+	//	Ethernet communication
+	Ethernet.begin(Mac ,Ip);
+	
+	//	Setting I/O mode
+	pinMode(5 ,OUTPUT);
+	pinMode(6 ,OUTPUT);
+	pinMode(7 ,OUTPUT);
+}</code></pre>
 					<li>以localIP()功能顯示Ethernet Shield所取得的IP</li>
+					<pre><code data-language="csharp">// initial
+void setup(){
+	//	Serial Baudrate
+	Serial.begin(115200);
+	
+	//	Ethernet communication
+	Ethernet.begin(Mac ,Ip);
+	
+	//	Setting I/O mode
+	pinMode(5 ,OUTPUT);
+	pinMode(6 ,OUTPUT);
+	pinMode(7 ,OUTPUT);
+	
+	//	Show local IP
+	Serial.print("Local IP : ");
+	Serial.println(Ethernet.localIP());
+}</code></pre>
 				</ul>
 				<h3>PubSubClient程式設計</h3>	
 				<ul>
 					<li>新增變數存放MQTT Server IP資料</li>
+					<pre><code data-language="csharp">// including the library
+#include&lt;SPI.h&gt;
+#include&lt;Ethernet.h&gt;
+#include&lt;PubSubClient.h&gt;
+#include&lt;dht11.h&gt;
+
+//	Ethernet variable
+byte	Mac[] = {0xDE ,0xAD ,0xBE ,0xEF ,0xFE ,0xED};
+byte	Ip[] = {192 ,168 ,1 ,200};
+EthernetClient  client;
+
+//	MQTT variable
+void	callback(char* topic, byte* payload, unsigned int length);
+int	ServerPort = 1883;
+byte	MqttServer[] = {192 ,168 ,1 ,252};
+PubSubClient  MqttClient(client);
+
+//	Module variable
+dht11	DhtSensor;
+int	PsSensor;</code></pre>
 					<li>程式初始化時設定目標Server的IP與Port</li>
+					<pre><code data-language="csharp">// initial
+void setup(){
+	//	Serial Baudrate
+	Serial.begin(115200);
+	
+	//	Ethernet communication
+	Ethernet.begin(Mac ,Ip);
+	
+	//	MQTT communication
+	MqttClient.setServer(MqttServer ,ServerPort);
+	MqttClient.setCallback(callback);
+	
+	//	Setting I/O mode
+	pinMode(5 ,OUTPUT);
+	pinMode(6 ,OUTPUT);
+	pinMode(7 ,OUTPUT);
+	
+	//	Show local IP
+	Serial.print("Local IP : ");
+	Serial.println(Ethernet.localIP());
+}</code></pre>
 					<li>主程式中判斷若連線成功，就向MQTT Server傳送Sensor的資料</li>
+					<pre><code data-language="csharp">// main loop
+void loop(){
+	char	msg[100] = " ";
+
+	//	Running at connect server
+	if(MqttClient.connect("SensorClient")){
+		//	Read sensor data
+		DhtSensor.read(A0);
+		PsSensor = analogRead(A1);
+		
+		//  Show value
+		Serial.print("Humidity : ");
+		Serial.println(DhtSensor.humidity);
+
+		sprintf(msg ,"{\"Humidity\"=%4d}" ,DhtSensor.humidity);
+		MqttClient.publish("Sensor",msg);
+	  
+		Serial.print("Temperature : ");
+		Serial.println(DhtSensor.temperature);
+		
+		sprintf(msg ,"{\"Temperature\"=%4d}" ,DhtSensor.temperature);
+		MqttClient.publish("Sensor",msg);
+		
+		Serial.print("Pressure : ");
+		Serial.println(PsSensor);
+		
+		sprintf(msg ,"{\"Pressure\"=%4d}" ,PsSensor);
+		MqttClient.publish("Sensor",msg);
+		
+		//	Test output
+		if(DhtSensor.humidity <= 30)
+			digitalWrite(7 ,HIGH);
+
+		if(DhtSensor.temperature >= 20)
+			digitalWrite(6 ,HIGH);
+
+		if(PsSensor >= 10)
+			digitalWrite(5 ,HIGH);
+	}
+	
+	//	Every second run one turn
+	delay(1000);
+}</code></pre>
 				</ul>
 				<h3>功能測試</h3>
 				<ul>

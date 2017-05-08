@@ -7,8 +7,13 @@
 
 		<link rel="stylesheet" href="stylesheets/styles.css">
 		<link rel="stylesheet" href="stylesheets/github-light.css">
-		<link rel="stylesheet" href="stylesheets/usc2017nsp.css">
 		<script src="javascripts/scale.fix.js"></script>
+		
+		<link rel="stylesheet" type="text/css" href="stylesheets/monokai.css" media="screen">
+		<script src="javascripts/rainbow-custom.min.js"></script>
+		<script src="javascripts/csharp.js"></script>
+
+		<link rel="stylesheet" href="stylesheets/usc2017nsp.css">
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 		<!--[if lt IE 9]>
 		<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -56,19 +61,105 @@
 				<h3>AnalogInput程式設計</h3>
 				<ul>
 					<li>在程式碼一開始時載入dht11.h</li>
+					<pre><code data-language="csharp">// including the library
+#include&lt;dht11.h&gt;</code></pre>
 					<li>程式初始化時設定Arduino與PC間的Baudrate</li>
+					<pre><code data-language="csharp">// initial
+void setup(){
+	//	Serial Baudrate
+	Serial.begin(115200);
+}</code></pre>
 					<li>主程式中以analogRead()功能讀取溫溼度Sensor與壓力Sensor的資料</li>
 					<li>讀取後以print()功能顯示在PC上</li>
+					<pre><code data-language="csharp">// including the library
+#include&lt;dht11.h&gt;
+
+//	Module variable
+dht11	DhtSensor;
+int	PsSensor;</code></pre>
+					<pre><code data-language="csharp">// main loop
+void loop(){
+	//	Read sensor data
+	DhtSensor.read(A0);
+	PsSensor = analogRead(A1);
+	
+	//  Show value
+	Serial.print("Humidity : ");
+	Serial.println(DhtSensor.humidity);
+  
+	Serial.print("Temperature : ");
+	Serial.println(DhtSensor.temperature);
+  
+	Serial.print("Pressure : ");
+	Serial.println(PsSensor);
+}</code></pre>
 				</ul>
 				<h3>DigitalOutput程式設計</h3>	
 				<ul>
 					<li>將LED與蜂鳴器接到Arduino開發板上</li>
 					<li>程式初始化時將LED與蜂鳴器腳位設定為Output</li>
+					<pre><code data-language="csharp">// initial
+void setup(){
+	//	Serial Baudrate
+	Serial.begin(115200);
+	
+	//	Setting I/O mode
+	pinMode(5 ,OUTPUT);
+	pinMode(6 ,OUTPUT);
+	pinMode(7 ,OUTPUT);
+}</code></pre>
 					<li>主程式中以digitalWrite()功能使LED發光、蜂鳴器發出聲音</li>
+					<pre><code data-language="csharp">// main loop
+void loop(){
+	//	Read sensor data
+	DhtSensor.read(A0);
+	PsSensor = analogRead(A1);
+	
+	//  Show value
+	Serial.print("Humidity : ");
+	Serial.println(DhtSensor.humidity);
+  
+	Serial.print("Temperature : ");
+	Serial.println(DhtSensor.temperature);
+  
+	Serial.print("Pressure : ");
+	Serial.println(PsSensor);
+	
+	//	Test output
+	digitalWrite(5 ,HIGH);
+	digitalWrite(6 ,HIGH);
+	digitalWrite(7 ,HIGH);
+}</code></pre>
 				</ul>
 				<h3>Input、Output結合</h3>
 				<ul>
 					<li>讀取Sensor的值後，加入判斷才使LED發光、蜂鳴器發出聲音</li>
+					<pre><code data-language="csharp">// main loop
+void loop(){
+	//	Read sensor data
+	DhtSensor.read(A0);
+	PsSensor = analogRead(A1);
+	
+	//  Show value
+	Serial.print("Humidity : ");
+	Serial.println(DhtSensor.humidity);
+  
+	Serial.print("Temperature : ");
+	Serial.println(DhtSensor.temperature);
+  
+	Serial.print("Pressure : ");
+	Serial.println(PsSensor);
+	
+	//	Test output
+	if(DhtSensor.humidity <= 30)
+		digitalWrite(7 ,HIGH);
+
+	if(DhtSensor.temperature >= 20)
+		digitalWrite(6 ,HIGH);
+
+	if(PsSensor >= 10)
+		digitalWrite(5 ,HIGH);
+}</code></pre>
 				</ul>
 				<h3>備註</h3>
 				<p>
