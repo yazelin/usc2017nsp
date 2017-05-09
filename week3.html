@@ -1,0 +1,179 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="chrome=1">
+		<title>Usc2017nsp by yazelin</title>
+
+		<link rel="stylesheet" href="stylesheets/styles.css">
+		<link rel="stylesheet" href="stylesheets/github-light.css">
+		<script src="javascripts/scale.fix.js"></script>
+		
+		<link rel="stylesheet" type="text/css" href="stylesheets/monokai.css" media="screen">
+		<script src="javascripts/rainbow-custom.min.js"></script>
+		<script src="javascripts/csharp.js"></script>
+
+		<link rel="stylesheet" href="stylesheets/usc2017nsp.css">
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+		<!--[if lt IE 9]>
+		<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+	</head>
+	<body>
+		<div class="wrapper">
+			<header>
+				<h1 class="header"><a href="./index.html">Usc2017nsp</a></h1>
+				<p class="header">實踐大學聯網感測實作</p>
+
+				開發環境
+				<ul>
+					<li class="download"><a class="buttons" href="https://www.arduino.cc/en/main/software">Arduino</a></li>
+					<li class="download"><a class="buttons" href="http://www.eclipse.org/downloads/download.php?file=/mosquitto/binary/win32/mosquitto-1.4.11-install-win32.exe">mosquitto</a></li>
+					<li class="download"><a class="buttons" href="http://slproweb.com/download/Win32OpenSSL_Light-1_0_2k.exe">Win32OpenSSL</a></li>
+					<li class="download"><a class="buttons" href="ftp://sources.redhat.com/pub/pthreads-win32/dll-latest/dll/x86/pthreadVC2.dll">pthreadVC2</a></li>
+					<li class="download"><a class="buttons" href="https://chrome.google.com/webstore/detail/mqttlens/hemojaaeigabkbcookmlgmdigohjobjm?hl=zh-TW">mqttlens</a></li>
+					<li class="download"><a class="buttons" href="./share/library.zip">Arduino library</a></li>
+					
+					<li><a class="buttons github" href="https://github.com/yazelin/usc2017nsp">View On GitHub</a></li>
+				</ul>
+
+				<p class="header">This project is maintained by <a class="header name" href="https://github.com/yazelin">yazelin</a></p>
+				
+			</header>
+			<section>
+				<h3><a href="./week1.html">第 03 週 (05/24) Arduino AnalogInput DigitalOutput (3)</a></h3>
+					<blockquote class="blockquote">
+					積沙成塔 集腋成裘
+					</blockquote>				
+				<ul>
+					<li>Sensor模組接線與函式庫安裝</li>
+					<li>AnalogInput程式設計</li>
+					<li>DigitalOutput程式設計</li>
+					<li>判斷式</li>
+				</ul>
+				
+				<h3>Sensor模組接線與函式庫安裝</h3>
+				<ul>
+					<li>將溫溼度與壓力Sensor的接腳接到Arduino開發板上</li>
+					<li>用Arduino IDE開啟新專案</li>
+					<li>草稿碼>匯入程式庫>加入ZIP程式庫，選擇PubSubClient.zip與DHT11.zip加入IDE</li>
+					
+				</ul>
+				<h3>AnalogInput程式設計</h3>
+				<ul>
+					<li>在程式碼一開始時載入dht11.h</li>
+					<pre><code data-language="csharp">// including the library
+#include&lt;dht11.h&gt;</code></pre>
+					<li>程式初始化時設定Arduino與PC間的Baudrate</li>
+					<pre><code data-language="csharp">// initial
+void setup(){
+	//	Serial Baudrate
+	Serial.begin(115200);
+}</code></pre>
+					<li>主程式中以analogRead()功能讀取溫溼度Sensor與壓力Sensor的資料</li>
+					<li>讀取後以print()功能顯示在PC上</li>
+					<pre><code data-language="csharp">// including the library
+#include&lt;dht11.h&gt;
+
+//	Module variable
+dht11	DhtSensor;
+int	PsSensor;</code></pre>
+					<pre><code data-language="csharp">// main loop
+void loop(){
+	//	Read sensor data
+	DhtSensor.read(A0);
+	PsSensor = analogRead(A1);
+	
+	//  Show value
+	Serial.print("Humidity : ");
+	Serial.println(DhtSensor.humidity);
+  
+	Serial.print("Temperature : ");
+	Serial.println(DhtSensor.temperature);
+  
+	Serial.print("Pressure : ");
+	Serial.println(PsSensor);
+}</code></pre>
+				</ul>
+				<h3>DigitalOutput程式設計</h3>	
+				<ul>
+					<li>將LED與蜂鳴器接到Arduino開發板上</li>
+					<li>程式初始化時將LED與蜂鳴器腳位設定為Output</li>
+					<pre><code data-language="csharp">// initial
+void setup(){
+	//	Serial Baudrate
+	Serial.begin(115200);
+	
+	//	Setting I/O mode
+	pinMode(5 ,OUTPUT);
+	pinMode(6 ,OUTPUT);
+	pinMode(7 ,OUTPUT);
+}</code></pre>
+					<li>主程式中以digitalWrite()功能使LED發光、蜂鳴器發出聲音</li>
+					<pre><code data-language="csharp">// main loop
+void loop(){
+	//	Read sensor data
+	DhtSensor.read(A0);
+	PsSensor = analogRead(A1);
+	
+	//  Show value
+	Serial.print("Humidity : ");
+	Serial.println(DhtSensor.humidity);
+  
+	Serial.print("Temperature : ");
+	Serial.println(DhtSensor.temperature);
+  
+	Serial.print("Pressure : ");
+	Serial.println(PsSensor);
+	
+	//	Test output
+	digitalWrite(5 ,HIGH);
+	digitalWrite(6 ,HIGH);
+	digitalWrite(7 ,HIGH);
+}</code></pre>
+				</ul>
+				<h3>判斷式</h3>
+				<ul>
+					<li>讀取Sensor的值後，加入判斷才使LED發光、蜂鳴器發出聲音</li>
+					<pre><code data-language="csharp">// main loop
+void loop(){
+	//	Read sensor data
+	DhtSensor.read(A0);
+	PsSensor = analogRead(A1);
+	
+	//  Show value
+	Serial.print("Humidity : ");
+	Serial.println(DhtSensor.humidity);
+  
+	Serial.print("Temperature : ");
+	Serial.println(DhtSensor.temperature);
+  
+	Serial.print("Pressure : ");
+	Serial.println(PsSensor);
+	
+	//	Test output
+	if(DhtSensor.humidity <= 30)
+		digitalWrite(7 ,HIGH);
+
+	if(DhtSensor.temperature >= 20)
+		digitalWrite(6 ,HIGH);
+
+	if(PsSensor >= 10)
+		digitalWrite(5 ,HIGH);
+}</code></pre>
+				</ul>
+				<h3>備註</h3>
+				<p>
+					<ul>
+						<li>參考範例<a href="./share/SensorValue.zip">SensorValue.zip</a></li>
+					</ul>
+				</p>
+			</section>
+			<footer>
+				<p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></ul>
+			</footer>
+		</div>
+		<!--[if !IE]><script>fixScale(document);</script><![endif]-->
+			
+	</body>
+</html>
