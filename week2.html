@@ -66,6 +66,14 @@ using uPLibrary.Networking.M2Mqtt;
 using uPLibrary.Networking.M2Mqtt.Messages;</code></pre>
 				<h3>訂閱者程式設計</h3>
 				<ul>
+					<li>訂閱者步驟
+						<ol>
+							<li>與mosquitto連線</li>
+							<li>向mosquitto訂閱主題</li>
+							<li>接收到主題與訊息時的處理</li>
+							<li>當程式結束時與mosquitto斷開連線</li>
+						</ol>
+					</li>
 					<li>連線到Broker(mosquitto)<br/>
 <pre><code data-language="csharp">//在public partial class Form1 : Form { } 中加入下面3個宣告
 delegate void SetTextCallback(string text);//用來更新UIText 的Callback
@@ -137,9 +145,23 @@ private void Form1_FormClosing(object sender, FormClosingEventArgs e)
 {
 	client.Disconnect();//中斷連線
 }</code></pre></li>
+				<li>提示-注意有坑
+					<ol>
+						<li>元件名稱</li>
+						<li>註冊事件</li>
+						<li>訂閱的主題名稱</li>
+					<ol>
+				</li>
 				</ul>
 				<h3>發佈者程式設計</h3>	
 				<ul>
+					<li>發佈者步驟
+						<ol>
+							<li>與mosquitto連線</li>
+							<li>向mosquitto發佈主題及訊息</li>
+							<li>當程式結束時與mosquitto斷開連線</li>
+						</ol>
+					</li>
 					<li>連線到Broker(mosquitto)(同訂閱者)<br/>
 					在程式執行時自動連線至MQTT Server(也可設計成輸入IP後按下按鈕連接)</li>
 					<li>發送主題及內容<br/>
@@ -162,6 +184,12 @@ private void btnPublish_Click(object sender, EventArgs e)
 }</code></pre>
 					輸入要發佈的主題名稱及內容後按發佈按鈕進行發佈</li>
 					<li>當關閉程式時中斷連線(同訂閱者)</li>
+					<li>提示-注意有坑
+						<ol>
+							<li>元件名稱</li>
+							<li>發佈的主題名稱</li>
+						<ol>
+					</li>
 				</ul>
 				<h3>備註</h3>
 				<p>
