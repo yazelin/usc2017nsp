@@ -1,0 +1,229 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="chrome=1">
+		<title>Usc2017nsp by yazelin</title>
+
+		<link rel="stylesheet" href="stylesheets/styles.css">
+		<link rel="stylesheet" href="stylesheets/github-light.css">
+		<script src="javascripts/scale.fix.js"></script>
+		
+		<link rel="stylesheet" type="text/css" href="stylesheets/monokai.css" media="screen">
+		<script src="javascripts/rainbow-custom.min.js"></script>
+		<script src="javascripts/csharp.js"></script>
+
+		<link rel="stylesheet" href="stylesheets/usc2017nsp.css">
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+		<!--[if lt IE 9]>
+		<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+	</head>
+	<body>
+		<div class="wrapper">
+			<header>
+				<h1 class="header"><a href="./index.html">Usc2017nsp</a></h1>
+				<p class="header">實踐大學聯網感測實作</p>
+
+				開發環境
+				<ul>
+					<li class="download"><a class="buttons" href="https://www.arduino.cc/en/main/software">Arduino</a></li>
+					<li class="download"><a class="buttons" href="http://www.eclipse.org/downloads/download.php?file=/mosquitto/binary/win32/mosquitto-1.4.11-install-win32.exe">mosquitto</a></li>
+					<li class="download"><a class="buttons" href="http://slproweb.com/download/Win32OpenSSL_Light-1_0_2k.exe">Win32OpenSSL</a></li>
+					<li class="download"><a class="buttons" href="ftp://sources.redhat.com/pub/pthreads-win32/dll-latest/dll/x86/pthreadVC2.dll">pthreadVC2</a></li>
+					<li class="download"><a class="buttons" href="https://chrome.google.com/webstore/detail/mqttlens/hemojaaeigabkbcookmlgmdigohjobjm?hl=zh-TW">mqttlens</a></li>
+					<li class="download"><a class="buttons" href="./share/library.zip">Arduino library</a></li>
+					
+					<li><a class="buttons github" href="https://github.com/yazelin/usc2017nsp">View On GitHub</a></li>
+				</ul>
+
+				<p class="header">This project is maintained by <a class="header name" href="https://github.com/yazelin">yazelin</a></p>
+				
+			</header>
+			<section>
+				<h3><a href="./week1.html">第 06 週 (06/14) Server程式+MySQL資料庫(3)</a></h3>
+					<blockquote class="blockquote">
+					滴水穿石，不是水多厲害，更不是石頭不厲害，而是時間太厲害。
+					</blockquote>				
+				<ul>
+					
+					<li>Server程式設計</li>
+				</ul>
+	
+
+				<h3>Using MySQL 函式庫</h3>
+<pre><code data-language="csharp">// including the MySQL Library
+using MySql.Data.MySqlClient;
+</code></pre>
+				<h3>Server程式設計</h3>
+				<ul>
+					<li>連結MySQL資料庫並查詢<br/>
+<pre><code data-language="csharp">//在public partial class Form1 : Form { } 中加入下面2個宣告
+delegate void addmysqlCallback(string topic, string msg);//用來更新新增至MySQL的Callback
+String Record_time;//紀錄資料加入的時間
+        
+        //連線參數
+        //資料來源:localhost
+        //port:3306
+        //
+        //使用者名稱:root，密碼：無
+        //建立MySQL連線
+        MySqlConnection connection = new MySqlConnection("datasource=localhost;port=3306;Initial Catalog='log';username=root;password="); 
+}
+//當視窗載入時觸發
+private void Form1_Load(object sender, EventArgs e)
+        {  //連接MySQL
+            connection.Open();  
+			
+           //load mysql data of test_sensor to dataGridView
+
+            //查詢alarm資料表的select語法
+            string select_alarm_Query = "SELECT * FROM alarm ORDER BY _AI DESC LIMIT 15";
+            //在記憶體建立新的alarm_table空白表格
+            DataTable alarm_table = new DataTable();
+            //MySqlDataAdapter類別用connection去查詢MySQL的資料
+            MySqlDataAdapter alarm_adapter = new MySqlDataAdapter(select_alarm_Query, connection);
+            //查詢後的alarm_adapter填入alarm_table
+            alarm_adapter.Fill(alarm_table);
+            //alarm_table顯示在dataGridView.DataSource
+            alarm_dataGridView.DataSource = alarm_table;
+            //dataGridView欄位依照內容長短調整欄寬
+            alarm_dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
+            //load mysql data of sensor to dataGridView 
+
+            //查詢sensor資料表的select語法
+            string select_sensor_Query = "SELECT * FROM sensor ORDER BY _AI DESC LIMIT 15";
+            //在記憶體建立新的sensor_table空白表格
+            DataTable sensor_table = new DataTable();
+            //MySqlDataAdapter類別用connection去查詢MySQL的資料
+            MySqlDataAdapter sensor_adapter = new MySqlDataAdapter(select_sensor_Query, connection);
+            //查詢後的sensor_adapter填入sensor_table
+            sensor_adapter.Fill(sensor_table);
+            //sensor_table顯示在dataGridView.DataSource
+            sensor_dataGridView.DataSource = sensor_table;
+            sensor_dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
+            //test select sensor
+
+            //查詢test_sensor資料表的select語法
+            string select_test_sensor_Query = "SELECT * FROM sensor ORDER BY _AI DESC LIMIT 15";
+            //在記憶體建立新的test_sensor_table空白表格
+            DataTable test_sensor_table = new DataTable();
+            //MySqlDataAdapter類別用connection去查詢MySQL的資料
+            MySqlDataAdapter test_sensor_adapter = new MySqlDataAdapter(select_test_sensor_Query, connection);
+            //查詢後的test_sensor_adapter填入test_sensor_table
+            test_sensor_adapter.Fill(test_sensor_table);
+            //test_sensor_table顯示在dataGridView.DataSource
+            test_dataGridView.DataSource = test_sensor_table;
+            //dataGridView欄位依照內容長短調整欄寬
+            test_dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+	}</code></pre>
+					</li>
+					
+					
+					<li>訂閱訊息與異常紀錄<br/>
+<pre><code data-language="csharp">//當視窗載入時觸發
+private void Form1_Load(object sender, EventArgs e)
+        { if (txtTopicSubscribe.Text != "")
+            {
+                //訂閱Sensor主題
+                client.Subscribe(new string[] { "Sensor" }, new byte[] { 0 });   // we need arrays as parameters because we can subscribe to different topics with one call
+                //訂閱Alarm主題
+                client.Subscribe(new string[] { "Alarm" }, new byte[] { 0 });   // we need arrays as parameters because we can subscribe to different topics with one call
+                SetText("");
+            }
+	}		
+</code></pre>
+					</li><li>當收到主題後的對應動作<br/>
+<pre><code data-language="csharp">void client_MqttMsgPublishReceived(object sender, MqttMsgPublishEventArgs e)
+        {
+            string ReceivedTopic = e.Topic.ToLower();//收到的主題轉成小寫
+            string ReceivedMessage = Encoding.UTF8.GetString(e.Message);//收到的訊息內容以UTF8編碼
+            addmysql(ReceivedTopic , ReceivedMessage);//收到資料後觸發addmysql()方法以ReceivedTopic和ReceivedMessage帶入
+
+            // we need this construction because the receiving code in the library and the UI with textbox run on different threads
+            //將主題與訊息寫進接收訊息框內，但因為MQTT接收的執行緒與UI執行緒不同，我們需要呼叫自訂的SetText函式做些處理
+            SetText(ReceivedTopic+":"+ReceivedMessage); 
+        }  
+        //當兩個不同執行緒上需要更新數值時的處理
+        private void addmysql(string topic, string msg)
+        {
+            // we need this construction because the receiving code in the library and the UI with textbox run on different threads
+            if (this.RecText.InvokeRequired)
+            {   
+                //如果需要Invoke
+                //設定CallBack,Invoke
+                addmysqlCallback d = new addmysqlCallback(addmysql);
+                this.Invoke(d, new object[] { topic, msg });
+            }
+            else
+            {
+                //若不需要Invoke直接新增至MySQL
+                Record_time = String.Format("{0:yyyy/MM/dd HH:mm:ss}", DateTime.Now);
+                string insertQuery = "INSERT INTO log." + topic + "(Record_time,Message) VALUES('" + Record_time + "','" + msg + "')";
+                MySqlCommand command = new MySqlCommand(insertQuery, connection);
+
+
+                try
+                {
+                    if (command.ExecuteNonQuery() == 1)
+                    {
+                        // MessageBox.Show("Data Inserted");
+                    }
+                    else
+                    {
+                        MessageBox.Show("Data Not Inserted");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+
+                //alarm select
+                string select_alarm_Query = "SELECT * FROM alarm ORDER BY _AI DESC LIMIT 15";
+                DataTable alarm_table = new DataTable();
+                MySqlDataAdapter alarm_adapter = new MySqlDataAdapter(select_alarm_Query, connection);
+                alarm_adapter.Fill(alarm_table);
+                alarm_dataGridView.DataSource = alarm_table;
+                alarm_dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
+                //sensor select
+                string select_sensor_Query = "SELECT * FROM sensor ORDER BY _AI DESC LIMIT 15";
+                DataTable sensor_table = new DataTable();
+                MySqlDataAdapter sensor_adapter = new MySqlDataAdapter(select_sensor_Query, connection);
+                sensor_adapter.Fill(sensor_table);
+                sensor_dataGridView.DataSource = sensor_table;
+                sensor_dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            }
+        }
+</code></pre>
+					</li>
+					
+					<li>當關閉程式時中斷連線
+<pre><code data-language="csharp">//當視窗關閉時
+private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+{
+	client.Disconnect();//中斷連線
+	connection.Close(); //與MySQL斷線
+}</code></pre></li>
+				</ul>
+			
+				
+				<h3>備註</h3>
+				<p>
+					<ul>
+						<li>參考連結<a href="https://www.nuget.org/packages/M2Mqtt/">M2Mqtt - MQTT Client Library for .Net</a></li>
+						<li>參考範例<a href="./share/MQTTClient.zip">MQTTClient.zip</a></li>
+					</ul>
+				</p>
+			</section>
+			<footer>
+				<p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></ul>
+			</footer>
+		</div>
+		<!--[if !IE]><script>fixScale(document);</script><![endif]-->
+			
+	</body>
+</html>
