@@ -135,6 +135,22 @@ void loop(){
 				<h3>判斷式</h3>
 				<ul>
 					<li>讀取Sensor的值後，加入判斷才使LED發光、蜂鳴器發出聲音</li>
+					<li>程式初始化時將LED與蜂鳴器關閉</li>
+					<pre><code data-language="csharp">// initial
+void setup(){
+	//	Serial Baudrate
+	Serial.begin(115200);
+	
+	//	Setting I/O mode
+	pinMode(5 ,OUTPUT);
+	pinMode(6 ,OUTPUT);
+	pinMode(7 ,OUTPUT);
+	
+	digitalWrite(5 ,LOW);
+	digitalWrite(6 ,LOW);
+	digitalWrite(7 ,LOW);
+}</code></pre>
+
 					<pre><code data-language="csharp">// main loop
 void loop(){
 	//	Read sensor data

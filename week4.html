@@ -63,17 +63,6 @@
 //	Module variable
 dht11	DhtSensor;
 int	PsSensor;</code></pre>
-					<li>在程式碼中新增callback()並實作功能</li>
-					<pre><code data-language="csharp">//  Callback function
-void	callback(char* topic, byte* payload, unsigned int length){
-	Serial.print("Message arrived [");
-	Serial.print(topic);
-	Serial.print("] ");
-	for (int i=0;i&lt;length;i++){
-		Serial.print((char)payload[i]);
-	}
-	Serial.println();
-}</code></pre>
 				</ul>
 				<h3>Ethernet程式設計</h3>
 				<ul>
@@ -105,6 +94,10 @@ void setup(){
 	pinMode(5 ,OUTPUT);
 	pinMode(6 ,OUTPUT);
 	pinMode(7 ,OUTPUT);
+	
+	digitalWrite(5 ,LOW);
+	digitalWrite(6 ,LOW);
+	digitalWrite(7 ,LOW);
 }</code></pre>
 					<li>以localIP()功能顯示Ethernet Shield所取得的IP</li>
 					<pre><code data-language="csharp">// initial
@@ -119,6 +112,10 @@ void setup(){
 	pinMode(5 ,OUTPUT);
 	pinMode(6 ,OUTPUT);
 	pinMode(7 ,OUTPUT);
+	
+	digitalWrite(5 ,LOW);
+	digitalWrite(6 ,LOW);
+	digitalWrite(7 ,LOW);
 	
 	//	Show local IP
 	Serial.print("Local IP : ");
@@ -140,7 +137,6 @@ byte	Ip[] = {192 ,168 ,1 ,200};
 EthernetClient  client;
 
 //	MQTT variable
-void	callback(char* topic, byte* payload, unsigned int length);
 int	ServerPort = 1883;
 byte	MqttServer[] = {192 ,168 ,1 ,252};
 PubSubClient  MqttClient(client);
@@ -159,12 +155,15 @@ void setup(){
 	
 	//	MQTT communication
 	MqttClient.setServer(MqttServer ,ServerPort);
-	MqttClient.setCallback(callback);
 	
 	//	Setting I/O mode
 	pinMode(5 ,OUTPUT);
 	pinMode(6 ,OUTPUT);
 	pinMode(7 ,OUTPUT);
+	
+	digitalWrite(5 ,LOW);
+	digitalWrite(6 ,LOW);
+	digitalWrite(7 ,LOW);
 	
 	//	Show local IP
 	Serial.print("Local IP : ");
