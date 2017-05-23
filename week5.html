@@ -50,21 +50,33 @@
 					<li>建置MySQL資料表</li>
 					<li>連結MySQL資料庫並查詢</li>
 					<li>新增資料至MySQL資料庫</li>
+					<li>當關閉程式時中斷連線</li>
 				</ul>
 				
 				<h3>Wampserver安裝</h3>
 				<ul>
+                    <li><a href="https://www.microsoft.com/zh-tw/download/details.aspx?id=53840">Microsoft Visual C++ 2015 可轉散發套件 Update 3</a> 安裝</li>
 					<li><a href="https://sourceforge.net/projects/wampserver/files/WampServer%203/WampServer%203.0.0/wampserver3.0.6_x64_apache2.4.23_mysql5.7.14_php5.6.25-7.0.10.exe/download">WampServer</a> 安裝</li>
-					<li><a href="https://www.microsoft.com/zh-tw/download/details.aspx?id=30679">Visual C++ Redistributable for Visual Studio 2012 Update 4</a> 安裝</li>
 					<li><a href="https://dev.mysql.com/downloads/connector/net/">mysql-connector-net-6.9.9</a> 安裝</li>
+				<li>參考影片<br/>
+				<iframe width="560" height="315" src="https://www.youtube.com/embed/utoczaNEcM8" frameborder="0" allowfullscreen></iframe>
+				</li>
 				</ul>
+				
 				<h3>建置MySQL資料表</h3>
-				
-				
-				
+				<ul>
+				<li>參考影片<br/>
+				<iframe width="560" height="315" src="https://www.youtube.com/embed/p-K1DOLIhnQ" frameborder="0" allowfullscreen></iframe>
+				</li>
+				</ul>
 				<h3>加入參考－MySQL組件</h3>
-
+				<ul>
+				<li>參考影片<br/>
+				</li>
+				</ul>
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/g9VlPSPFlQg" frameborder="0" allowfullscreen></iframe>
 				<h3>介面設計參考</h3>
+				
 				<p><img src="./images/mysqlformexample.png"><br/>
 				<h3>Using MySQL 函式庫</h3>
 <pre><code data-language="csharp">// including the MySQL Library
@@ -83,7 +95,7 @@ String Record_time;//紀錄資料加入的時間
         //使用者名稱:root，密碼：無
         //建立MySQL連結參數
         MySqlConnection connection = new MySqlConnection("datasource=localhost;port=3306;Initial Catalog='test_log';username=root;password="); 
-}
+
 //當視窗載入時觸發
 private void Form1_Load(object sender, EventArgs e)
         {  //連結MySQL
@@ -95,18 +107,18 @@ private void Form1_Load(object sender, EventArgs e)
 <pre><code data-language="csharp">// 查詢test_alarm資料表的方法
 private void Select_test_alarm_MySQL()
         {
-            //load mysql data of test_sensor to dataGridView
+            //load mysql data of test_alarm to dataGridView
 
-            //查詢test_sensor資料表的select語法
-            string select_test_sensor_Query = "SELECT * FROM test_alarm ORDER BY _AI DESC LIMIT 15";
-            //在記憶體建立新的test_sensor_table空白表格
-            DataTable test_sensor_table = new DataTable();
+            //查詢test_alarm資料表的select語法
+            string select_test_alarm_Query = "SELECT * FROM test_alarm ORDER BY _AI DESC LIMIT 15";
+            //在記憶體建立新的test_alarm_table空白表格
+            DataTable test_alarm_table = new DataTable();
             //MySqlDataAdapter類別用connection去查詢MySQL的資料
-            MySqlDataAdapter test_sensor_adapter = new MySqlDataAdapter(select_test_sensor_Query, connection);
-            //查詢後的test_sensor_adapter填入test_sensor_table
-            test_sensor_adapter.Fill(test_sensor_table);
-            //test_sensor_table顯示在dataGridView.DataSource
-            test_dataGridView.DataSource = test_sensor_table;
+            MySqlDataAdapter test_alarm_adapter = new MySqlDataAdapter(select_test_alarm_Query, connection);
+            //查詢後的test_salarm_adapter填入test_alarm_table
+            test_alarm_adapter.Fill(test_alarm_table);
+            //test_alarm_table顯示在dataGridView.DataSource
+            test_dataGridView.DataSource = test_alarm_table;
             //dataGridView欄位依照內容長短調整欄寬
             test_dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
         }     		</code></pre>
@@ -156,21 +168,23 @@ private void insertbtn_Click(object sender, EventArgs e)
         }
 </code></pre>
 					</li>
-					<li>當關閉程式時中斷連線
+					<H3>當關閉程式時中斷連線</H3>
 <pre><code data-language="csharp">//當視窗關閉時
 private void Form1_FormClosing(object sender, FormClosingEventArgs e)
 {
 	connection.Close(); //與MySQL斷線
-}</code></pre></li>
+}</code></pre>
 				</ul>
-			
+			<ul>
+				<li>參考影片<br/>
+				<iframe width="560" height="315" src="https://www.youtube.com/embed/OPHbNR8faZc" frameborder="0" allowfullscreen></iframe>
+				</li>
+				</ul>
+				
 				
 				<h3>備註</h3>
 				<p>
-					<ul>
-						<li>參考連結<a href="https://www.nuget.org/packages/M2Mqtt/">M2Mqtt - MQTT Client Library for .Net</a></li>
-						<li>參考範例<a href="./share/MQTTClient.zip">MQTTClient.zip</a></li>
-					</ul>
+					
 				</p>
 			</section>
 			<footer>
