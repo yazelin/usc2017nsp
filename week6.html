@@ -49,7 +49,8 @@
 					
 					<li>Server程式設計</li>
 				</ul>
-	
+	<h3>介面設計參考</h3>
+				<p><img src="./images/MQTTClient_Connection_MySQL.png"><br/>
 
 				<h3>Using MySQL 函式庫</h3>
 <pre><code data-language="csharp">// including the MySQL Library
@@ -57,7 +58,7 @@ using MySql.Data.MySqlClient;
 </code></pre>
 				<h3>Server程式設計</h3>
 				<ul>
-					<li>連結MySQL資料庫並查詢<br/>
+					<li>連結MySQL資料庫<br/>
 <pre><code data-language="csharp">//在public partial class Form1 : Form { } 中加入下面2個宣告
 delegate void addmysqlCallback(string topic, string msg);//用來更新新增至MySQL的Callback
 String Record_time;//紀錄資料加入的時間
@@ -65,17 +66,33 @@ String Record_time;//紀錄資料加入的時間
         //連線參數
         //資料來源:localhost
         //port:3306
-        //
+        //選擇某個資料庫:log
         //使用者名稱:root，密碼：無
         //建立MySQL連線
         MySqlConnection connection = new MySqlConnection("datasource=localhost;port=3306;Initial Catalog='log';username=root;password="); 
+		
+        //連線參數
+        //資料來源:本機localhost
+        //port:3306
+        //選擇某個資料庫:test_log
+        //使用者名稱:root，密碼：無
+        //建立MySQL連結參數
+        MySqlConnection test_connection = new MySqlConnection("datasource=localhost;port=3306;Initial Catalog='test_log';username=root;password=");
 }
 //當視窗載入時觸發
 private void Form1_Load(object sender, EventArgs e)
-        {  //連接MySQL
-            connection.Open();  
-			
-           //load mysql data of test_sensor to dataGridView
+        {  
+            connection.Open(); //連結MySQL的log資料庫
+            test_connection.Open(); //連結MySQL的test_log資料庫
+            Select_alarm_MySQL(); // 查詢alarm資料表的方法
+            Select_sensor_MySQL();// 查詢sensor資料表的方法
+            Select_test_alarm_MySQL(); // 查詢test_alarm資料表的方法        
+	}</code></pre>
+					</li><li>查詢alarm資料表的方法<br/>
+<pre><code data-language="csharp">//查詢alarm資料表的方法
+private void Select_alarm_MySQL()
+        {
+            //load mysql data of alarm to dataGridView 
 
             //查詢alarm資料表的select語法
             string select_alarm_Query = "SELECT * FROM alarm ORDER BY _AI DESC LIMIT 15";
@@ -89,9 +106,14 @@ private void Form1_Load(object sender, EventArgs e)
             alarm_dataGridView.DataSource = alarm_table;
             //dataGridView欄位依照內容長短調整欄寬
             alarm_dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-
-            //load mysql data of sensor to dataGridView 
-
+        }	
+</code></pre>
+					</li><li>查詢sensor資料表的方法<br/>
+<pre><code data-language="csharp">//查詢sensor資料表的方法
+private void Select_sensor_MySQL()
+        {
+            //load mysql data of sensor to dataGridView
+		
             //查詢sensor資料表的select語法
             string select_sensor_Query = "SELECT * FROM sensor ORDER BY _AI DESC LIMIT 15";
             //在記憶體建立新的sensor_table空白表格
@@ -103,24 +125,30 @@ private void Form1_Load(object sender, EventArgs e)
             //sensor_table顯示在dataGridView.DataSource
             sensor_dataGridView.DataSource = sensor_table;
             sensor_dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-
-            //test select sensor
-
+        }	
+</code></pre>
+					</li><li>查詢test_alarm資料表的方法<br/>
+<pre><code data-language="csharp">//查詢test_alarm資料表的方法
+private void Select_sensor_MySQL()
+        {
+            //load mysql data of test_sensor to dataGridView
+		
             //查詢test_sensor資料表的select語法
-            string select_test_sensor_Query = "SELECT * FROM sensor ORDER BY _AI DESC LIMIT 15";
+            string select_test_alarm_Query = "SELECT * FROM test_alarm ORDER BY _AI DESC LIMIT 15";
             //在記憶體建立新的test_sensor_table空白表格
-            DataTable test_sensor_table = new DataTable();
+            DataTable test_alarm_table = new DataTable();
             //MySqlDataAdapter類別用connection去查詢MySQL的資料
-            MySqlDataAdapter test_sensor_adapter = new MySqlDataAdapter(select_test_sensor_Query, connection);
+            MySqlDataAdapter test_alarm_adapter = new MySqlDataAdapter(select_test_alarm_Query, test_connection);
             //查詢後的test_sensor_adapter填入test_sensor_table
-            test_sensor_adapter.Fill(test_sensor_table);
+            test_alarm_adapter.Fill(test_alarm_table);
             //test_sensor_table顯示在dataGridView.DataSource
-            test_dataGridView.DataSource = test_sensor_table;
+            test_dataGridView.DataSource = test_alarm_table;
             //dataGridView欄位依照內容長短調整欄寬
             test_dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-	}</code></pre>
+        }	
+</code></pre>
 					</li>
-					
+
 					
 					<li>訂閱訊息與異常紀錄<br/>
 <pre><code data-language="csharp">//當視窗載入時觸發
@@ -181,21 +209,9 @@ private void Form1_Load(object sender, EventArgs e)
                     MessageBox.Show(ex.Message);
                 }
 
-                //alarm select
-                string select_alarm_Query = "SELECT * FROM alarm ORDER BY _AI DESC LIMIT 15";
-                DataTable alarm_table = new DataTable();
-                MySqlDataAdapter alarm_adapter = new MySqlDataAdapter(select_alarm_Query, connection);
-                alarm_adapter.Fill(alarm_table);
-                alarm_dataGridView.DataSource = alarm_table;
-                alarm_dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+                Select_alarm_MySQL();//查詢alarm資料表的方法
 
-                //sensor select
-                string select_sensor_Query = "SELECT * FROM sensor ORDER BY _AI DESC LIMIT 15";
-                DataTable sensor_table = new DataTable();
-                MySqlDataAdapter sensor_adapter = new MySqlDataAdapter(select_sensor_Query, connection);
-                sensor_adapter.Fill(sensor_table);
-                sensor_dataGridView.DataSource = sensor_table;
-                sensor_dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+                Select_sensor_MySQL();//查詢sensor資料表的方法
             }
         }
 </code></pre>
@@ -205,8 +221,9 @@ private void Form1_Load(object sender, EventArgs e)
 <pre><code data-language="csharp">//當視窗關閉時
 private void Form1_FormClosing(object sender, FormClosingEventArgs e)
 {
-	client.Disconnect();//中斷連線
-	connection.Close(); //與MySQL斷線
+    client.Disconnect();//中斷連線
+    connection.Close(); //與MySQL的log資料庫斷線
+    test_connection.Close();//與MySQL的test_log資料庫斷線
 }</code></pre></li>
 				</ul>
 			
