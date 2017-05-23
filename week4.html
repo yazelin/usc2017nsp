@@ -40,7 +40,7 @@
 				<p class="header">This project is maintained by <a class="header name" href="https://github.com/yazelin">yazelin</a></p>
 			</header>
 			<section>
-				<h3><a href="./week1.html">第 04 週 (05/31) Arduino Ethernet Shield實際連線到Server-1 (3)</a></h3>
+				<h3><a href="./week4.html">第 04 週 (05/31) Arduino Ethernet Shield實際連線到Server-1 (3)</a></h3>
 					<blockquote class="blockquote">
 					積土成山，風雨興焉；積水成淵，蛟龍生焉；積善成德，而神明自得，聖心備焉。故不積蹞步，無以至千里；不積小流，無以成江海。騏驥一躍，不能十步；駑馬十駕，功在不舍。
 					</blockquote>				
@@ -49,6 +49,9 @@
 					<li>Ethernet程式設計</li>
 					<li>PubSubClient程式設計</li>
 					<li>功能測試</li>
+					<li>Arduino Ethernet Shield接線參考影片<br/>
+					<iframe width="560" height="315" src="https://www.youtube.com/embed/s2XMNALa-Ac?list=PLinsvwAGzubbk8-0G1hAUsHpG08yVEqVm" frameborder="0" allowfullscreen></iframe>
+					</li>
 				</ul>
 				
 				<h3>Ethernet與PubSubClient函式的使用</h3>
@@ -63,17 +66,6 @@
 //	Module variable
 dht11	DhtSensor;
 int	PsSensor;</code></pre>
-					<li>在程式碼中新增callback()並實作功能</li>
-					<pre><code data-language="csharp">//  Callback function
-void	callback(char* topic, byte* payload, unsigned int length){
-	Serial.print("Message arrived [");
-	Serial.print(topic);
-	Serial.print("] ");
-	for (int i=0;i&lt;length;i++){
-		Serial.print((char)payload[i]);
-	}
-	Serial.println();
-}</code></pre>
 				</ul>
 				<h3>Ethernet程式設計</h3>
 				<ul>
@@ -105,6 +97,10 @@ void setup(){
 	pinMode(5 ,OUTPUT);
 	pinMode(6 ,OUTPUT);
 	pinMode(7 ,OUTPUT);
+	
+	digitalWrite(5 ,LOW);
+	digitalWrite(6 ,LOW);
+	digitalWrite(7 ,LOW);
 }</code></pre>
 					<li>以localIP()功能顯示Ethernet Shield所取得的IP</li>
 					<pre><code data-language="csharp">// initial
@@ -119,6 +115,10 @@ void setup(){
 	pinMode(5 ,OUTPUT);
 	pinMode(6 ,OUTPUT);
 	pinMode(7 ,OUTPUT);
+	
+	digitalWrite(5 ,LOW);
+	digitalWrite(6 ,LOW);
+	digitalWrite(7 ,LOW);
 	
 	//	Show local IP
 	Serial.print("Local IP : ");
@@ -140,7 +140,6 @@ byte	Ip[] = {192 ,168 ,1 ,200};
 EthernetClient  client;
 
 //	MQTT variable
-void	callback(char* topic, byte* payload, unsigned int length);
 int	ServerPort = 1883;
 byte	MqttServer[] = {192 ,168 ,1 ,252};
 PubSubClient  MqttClient(client);
@@ -159,12 +158,15 @@ void setup(){
 	
 	//	MQTT communication
 	MqttClient.setServer(MqttServer ,ServerPort);
-	MqttClient.setCallback(callback);
 	
 	//	Setting I/O mode
 	pinMode(5 ,OUTPUT);
 	pinMode(6 ,OUTPUT);
 	pinMode(7 ,OUTPUT);
+	
+	digitalWrite(5 ,LOW);
+	digitalWrite(6 ,LOW);
+	digitalWrite(7 ,LOW);
 	
 	//	Show local IP
 	Serial.print("Local IP : ");
@@ -214,6 +216,9 @@ void loop(){
 	//	Every second run one turn
 	delay(1000);
 }</code></pre>
+				<li>程式參考影片<br/>
+				<iframe width="560" height="315" src="https://www.youtube.com/embed/UX1KB2Tthz4?list=PLinsvwAGzubbk8-0G1hAUsHpG08yVEqVm" frameborder="0" allowfullscreen></iframe>
+				</li>
 				</ul>
 				<h3>功能測試</h3>
 				<ul>
