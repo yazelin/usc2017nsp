@@ -205,18 +205,33 @@ void loop(){
 		//	Test output
 		if(DhtSensor.humidity <= 30){
 			digitalWrite(7 ,HIGH);
+			//  Alarm msg
+			Serial.println("Humidity Alarm. ");
+			sprintf(msg ,"{\"Humidity\":%4d}" ,DhtSensor.humidity);
+			MqttClient.publish("Alarm",msg);
+			
 		}else{
 			digitalWrite(7 ,LOW);	
 		}
 		
 		if(DhtSensor.temperature <= 25){
 			digitalWrite(6 ,HIGH);
+			//  Alarm msg
+			Serial.println("Temperature Alarm. ");
+			sprintf(msg ,"{\"Temperature\":%4d}" ,DhtSensor.temperature);
+			MqttClient.publish("Alarm",msg);
+			
 		}else{
 			digitalWrite(6 ,LOW);
 		}
 
 		if(PsSensor >= 10){
 			digitalWrite(5 ,HIGH);
+			//  Alarm msg
+			Serial.println("Pressure Alarm. ");
+			sprintf(msg ,"{\"Pressure\":%4d}" ,PsSensor);
+			MqttClient.publish("Alarm",msg);
+			
 		}else{
 			digitalWrite(5 ,LOW);
 		}
