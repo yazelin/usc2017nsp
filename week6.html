@@ -72,7 +72,7 @@ using MySql.Data.MySqlClient;
 				
 				<h3>Server程式設計</h3>
 				<ul>
-					<li>連結MySQL資料庫<br/>
+					<li><修改>連結MySQL資料庫 (請參考 <a href="./week5.html">第五週</a> 程式做以下修改)<br/>
 <pre><code data-language="csharp">//在public partial class Form1 : Form { } 中加入下面2個宣告
 delegate void UpdateDataGridViewCallback(string topic, string msg);//用來更新新增至MySQL的Callback
 
@@ -103,7 +103,7 @@ private void Form1_Load(object sender, EventArgs e)
 	SetText("");//先將RecText.TextBox清空
 	//===NEW===
 }</code></pre>
-					</li><li>查詢資料表的方法<br/>
+					</li><li><修改>查詢資料表的方法 (請參考 <a href="./week5.html">第五週</a> 程式)<br/>
 <pre><code data-language="csharp">//查詢某一個資料表的方法
 private void SelectMySQL(MySqlConnection connection, string tablename, DataGridView datagrid)
 {
@@ -122,7 +122,7 @@ private void SelectMySQL(MySqlConnection connection, string tablename, DataGridV
 	//dataGridView欄位依照內容長短調整欄寬
 	datagrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 }</code></pre>
-					</li><li>新增資料至某個資料表的方法<br/>
+					</li><li><修改>新增資料至某個資料表的方法 (請參考 <a href="./week5.html">第五週</a> 程式)<br/>
 <pre><code data-language="csharp">//新增Message資料至某個資料表的方法
 private void Insert(MySqlConnection connection, string tablename, string message)
 {
@@ -134,7 +134,7 @@ private void Insert(MySqlConnection connection, string tablename, string message
 }
 </code></pre>
 					</li>
-					<li>更新DataGridView					
+					<li><新增>UpdateDataGridView (請參考 <a href="./week2.html">第二週</a> 不同執行緒更新UI的方式(SetText)撰寫新的程式碼如下)				
 <pre><code data-language="csharp">//當兩個不同執行緒上需要更新數值(UI執行緒)時的處理
 private void UpdateDataGridView(string topic, string message)
 {
@@ -158,7 +158,7 @@ private void UpdateDataGridView(string topic, string message)
 }
 </code></pre>
 					</li>
-					<li>當收到主題後的對應動作<br/>
+					<li><新增>當收到主題後的對應動作 (以 <a href="./week2.html">第二週</a> 的程式新增以下幾行)<br/>
 <pre><code data-language="csharp">// this code runs when a message was received
 void client_MqttMsgPublishReceived(object sender, MqttMsgPublishEventArgs e)
 {
@@ -178,7 +178,7 @@ void client_MqttMsgPublishReceived(object sender, MqttMsgPublishEventArgs e)
 </code></pre>
 					</li>
 					
-					<li>當關閉程式時中斷連線
+					<li><新增>當關閉程式時與Mysql中斷連線
 <pre><code data-language="csharp">//當視窗關閉時
 private void Form1_FormClosing(object sender, FormClosingEventArgs e)
 {
@@ -186,7 +186,13 @@ private void Form1_FormClosing(object sender, FormClosingEventArgs e)
 	//===NEW===
 	connection.Close(); //與MySQL 中斷連線
 	//===NEW===
-}</code></pre></li>
+}</code></pre>
+				</li>
+				<li>參考影片
+				…
+				</li>
+
+
 				</ul>
 			
 				
