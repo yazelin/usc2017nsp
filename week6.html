@@ -24,7 +24,6 @@
 			<header>
 				<h1 class="header"><a href="./index.html">Usc2017nsp</a></h1>
 				<p class="header">實踐大學聯網感測實作</p>
-
 				開發環境
 				<ul>
 					<li class="download"><a class="buttons" href="https://www.arduino.cc/en/main/software">Arduino</a></li>
@@ -46,155 +45,154 @@
 					滴水穿石，不是水多厲害，更不是石頭不厲害，而是時間太厲害。
 					</blockquote>				
 				<ul>
-					
+					<li>建置MySQL資料表</li>
 					<li>Server程式設計</li>
 				</ul>
 				<h3>建置MySQL資料表</h3>
-				依底下參考影片，重新建立log資料庫，建立sensor與alarm資料表，欄位如同參考影片
+					<p>依底下參考影片，重新建立log資料庫，建立sensor與alarm資料表<br>
+					sensor資料表內有_AI(int)、Record_time(datetime)、Message(text)三個欄位<br>
+					alarm資料表內也有_AI(int)、Record_time(datetime)、Message(text)三個欄位</p>
 				<ul>
-				<li>參考影片<br/>
-				<iframe width="560" height="315" src="https://www.youtube.com/embed/p-K1DOLIhnQ" frameborder="0" allowfullscreen></iframe>
-				</li>
+					<li>參考影片<br/>
+						<iframe width="560" height="315" src="https://www.youtube.com/embed/p-K1DOLIhnQ" frameborder="0" allowfullscreen></iframe>
+					</li>
 				</ul>
-	<h3>介面設計參考</h3>
-				<p><img src="./images/MQTTClient_Connection_MySQL.png"><br/>
-
-				<h3>Using MySQL 函式庫</h3>
+				
+				<h3>介面設計參考</h3>
+				<p>
+				以 <a href="./week2.html">第二週</a> 完成的專案新增2個Label和2個DataGridView用來顯示sensor和alarm
+				<img src="./images/MQTTClient_Connection_MySQL.png"><br/>
+				介面設計參考圖
+				</p>
+				<h3>Using MySQL 函式庫</h3>				
+				<p>請先確定完成 <a href="./week5.html">第五週</a> mysql-connector-net-6.9.9 安裝<br/>並在專案中加入參考(Mysql.Data)後在程式碼中加入</p>
 <pre><code data-language="csharp">// including the MySQL Library
 using MySql.Data.MySqlClient;
 </code></pre>
+				
 				<h3>Server程式設計</h3>
 				<ul>
-					<li>連結MySQL資料庫<br/>
+					<li><修改>連結MySQL資料庫 (請參考 <a href="./week5.html">第五週</a> 程式做以下修改)<br/>
 <pre><code data-language="csharp">//在public partial class Form1 : Form { } 中加入下面2個宣告
-delegate void addmysqlCallback(string topic, string msg);//用來更新新增至MySQL的Callback
-String Record_time;//紀錄資料加入的時間
-        
-        //連線參數
-        //資料來源:localhost
-        //port:3306
-        //選擇某個資料庫:log
-        //使用者名稱:root，密碼：無
-        //建立MySQL連線
-        MySqlConnection connection = new MySqlConnection("datasource=localhost;port=3306;Initial Catalog='log';username=root;password="); 
-		
-        //連線參數
-        //資料來源:本機localhost
-        //port:3306
-        //選擇某個資料庫:test_log
-        //使用者名稱:root，密碼：無
-        //建立MySQL連結參數
-        MySqlConnection test_connection = new MySqlConnection("datasource=localhost;port=3306;Initial Catalog='test_log';username=root;password=");
-}
+delegate void UpdateDataGridViewCallback(string topic, string msg);//用來更新新增至MySQL的Callback
+
+//連線參數   (請依實際Mysql設定自行修改)
+//資料來源:本機localhost
+//port:3306
+//選擇某個資料庫:log
+//使用者名稱:loguser，密碼：123
+//建立MySQL連結參數
+MySqlConnection connection = new MySqlConnection("datasource=localhost;port=3306;Initial Catalog='log';username=loguser;password=123");
+
 //當視窗載入時觸發
 private void Form1_Load(object sender, EventArgs e)
-        {  
-            connection.Open(); //連結MySQL的log資料庫
-            test_connection.Open(); //連結MySQL的test_log資料庫
-            
-            SelectMySQL(connection, "alarm", alarm_dataGridView);// 查詢alarm資料表的方法
-            SelectMySQL(connection, "sensor", sensor_dataGridView);// 查詢sensor資料表的方法
-            SelectMySQL(test_connection, "test_alarm", test_dataGridView);// 查詢test_alarm資料表的方法
-            //subscribe
-            //訂閱訊息與異常紀錄
-            client.Subscribe(new string[] { "Sensor", "Alarm" }, new byte[] { 0, 0 });   // we need arrays as parameters because we can subscribe to different topics with one call
-            SetText("");//將RecText.TextBox清空       
-	}</code></pre>
-					</li><li>查詢某一資料表的方法<br/>
+{
+	client = new MqttClient("localhost");
+	client.MqttMsgPublishReceived += client_MqttMsgPublishReceived;
+	clientId = Guid.NewGuid().ToString();
+	client.Connect(clientId);
+
+	//===NEW=== 
+	connection.Open(); //與MySQL建立連線並使用log資料庫
+
+	SelectMySQL(connection, "sensor", dataGridView_sensor);// 查詢(log資料庫內的)sensor資料表
+	SelectMySQL(connection, "alarm", dataGridView_alarm);// 查詢(log資料庫內的)alarm資料表
+
+	//訂閱訊息主題與異常紀錄主題(在Load時就訂閱所以不必再用輸入文字框來訂閱(Sensor、Alarm)主題)
+	client.Subscribe(new string[] { "Sensor", "Alarm" }, new byte[] { 0, 0 });   // we need arrays as parameters because we can subscribe to different topics with one call
+	SetText("");//先將RecText.TextBox清空
+	//===NEW===
+}</code></pre>
+					</li><li><修改>查詢資料表的方法 (請參考 <a href="./week5.html">第五週</a> 程式)<br/>
 <pre><code data-language="csharp">//查詢某一個資料表的方法
 private void SelectMySQL(MySqlConnection connection, string tablename, DataGridView datagrid)
-        {
-            //load mysql data to dataGridView 
+{
+	//從 MYSQL 中查詢資料並於 dataGridView 中顯示 
 
-            //查詢資料表的select語法
-            string select_Query = "SELECT * FROM " + tablename + " ORDER BY _AI DESC LIMIT 15";
-            //在記憶體建立新的table空白表格
-            DataTable table = new DataTable();
-            //MySqlDataAdapter類別用connection去查詢MySQL的資料
-            MySqlDataAdapter adapter = new MySqlDataAdapter(select_Query, connection);
-            //查詢後的adapter填入table
-            adapter.Fill(table);
-            //table顯示在dataGridView的DataSource
-            datagrid.DataSource = table;
-            //dataGridView欄位依照內容長短調整欄寬
-            datagrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-        }	
-</code></pre>
-					</li><li>新增資料至某個資料表的方法<br/>
-<pre><code data-language="csharp">//新增資料至某個資料表的方法
-private void insert(MySqlConnection oneofconnection, string oneoftablename, string oneofmsg)
-        {
-            Record_time = String.Format("{0:yyyy/MM/dd HH:mm:ss}", DateTime.Now);
-            string insertQuery = "INSERT INTO " + oneoftablename + "(Record_time,Message) VALUES('" + Record_time + "','" + oneofmsg + "')";
-            MySqlCommand command = new MySqlCommand(insertQuery, oneofconnection);
-            command.ExecuteNonQuery();
-        }	
-</code></pre>
-					</li><li>新增&查詢test_alarm資料表的方法<br/>
-<pre><code data-language="csharp">private void insertbtn_Click(object sender, EventArgs e)
-        {
-            //新增message_textBox.Text至test_alarm的資料表
-            insert(test_connection, "test_alarm", message_textBox.Text);
-
-            //查詢test_alarm資料表的方法
-            SelectMySQL(test_connection, "test_alarm", test_dataGridView);
-        }
-
-private void selectbtn_Click(object sender, EventArgs e)
-        {
-            //查詢test_alarm資料表的方法
-            SelectMySQL(test_connection, "test_alarm", test_dataGridView);
-        }		
+	//查詢資料表的select語法
+	string sql = "SELECT * FROM " + tablename + " ORDER BY _AI DESC LIMIT 5";
+	//在記憶體建立新的table空白表格
+	DataTable table = new DataTable();
+	//MySqlDataAdapter類別用connection去查詢MySQL的資料
+	MySqlDataAdapter adapter = new MySqlDataAdapter(sql, connection);
+	//查詢後的adapter填入table
+	adapter.Fill(table);
+	//table顯示在dataGridView的DataSource
+	datagrid.DataSource = table;
+	//dataGridView欄位依照內容長短調整欄寬
+	datagrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+}</code></pre>
+					</li><li><修改>新增資料至某個資料表的方法 (請參考 <a href="./week5.html">第五週</a> 程式)<br/>
+<pre><code data-language="csharp">//新增Message資料至某個資料表的方法
+private void Insert(MySqlConnection connection, string tablename, string message)
+{
+	String Record_time;//紀錄資料加入的時間
+	Record_time = String.Format("{0:yyyy/MM/dd HH:mm:ss}", DateTime.Now);
+	string sql = "INSERT INTO " + tablename + "(Record_time,Message) VALUES('" + Record_time + "','" + message + "')";
+	MySqlCommand command = new MySqlCommand(sql, connection);
+	command.ExecuteNonQuery();//執行SQL
+}
 </code></pre>
 					</li>
+					<li><新增>UpdateDataGridView (請參考 <a href="./week2.html">第二週</a> 不同執行緒更新UI的方式(SetText)撰寫新的程式碼如下)				
+<pre><code data-language="csharp">//當兩個不同執行緒上需要更新數值(UI執行緒)時的處理
+private void UpdateDataGridView(string topic, string message)
+{
+	// we need this construction because the receiving code in the library and the UI with DataGridView run on different threads
+	if (this.InvokeRequired)
+	{
+		//如果需要Invoke
+		//設定CallBack,Invoke
+		UpdateDataGridViewCallback d = new UpdateDataGridViewCallback(UpdateDataGridView);
+		this.Invoke(d, new object[] { topic, message });
+	}
+	else
+	{
+		//若不需要Invoke直接新增至MySQL
+		//新增資料至主題對應的資料表
+		Insert(connection, topic, message);
 
-					
-					<li>當收到主題後的對應動作<br/>
+		//查詢主題對應的資料表
+		SelectMySQL(connection, topic, (DataGridView)this.Controls.Find("dataGridView_"+topic, true)[0]);
+	}
+}
+</code></pre>
+					</li>
+					<li><新增>當收到主題後的對應動作 (以 <a href="./week2.html">第二週</a> 的程式新增以下幾行)<br/>
 <pre><code data-language="csharp">// this code runs when a message was received
 void client_MqttMsgPublishReceived(object sender, MqttMsgPublishEventArgs e)
-        {
-            string ReceivedTopic = e.Topic.ToLower();//收到的主題轉成小寫
-            string ReceivedMessage = Encoding.UTF8.GetString(e.Message);//收到的訊息內容以UTF8編碼
-            addmysql(ReceivedTopic , ReceivedMessage);//收到資料後觸發addmysql()方法以ReceivedTopic和ReceivedMessage帶入
+{
+	string ReceivedMessage = Encoding.UTF8.GetString(e.Message);
 
-            // we need this construction because the receiving code in the library and the UI with textbox run on different threads
-            //將主題與訊息寫進接收訊息框內，但因為MQTT接收的執行緒與UI執行緒不同，我們需要呼叫自訂的SetText函式做些處理
-            SetText(ReceivedTopic+":"+ReceivedMessage); 
-        }  
-	
-        //當兩個不同執行緒上需要更新數值時的處理
-        private void addmysql(string topic, string msg)
-        {
-            // we need this construction because the receiving code in the library and the UI with textbox run on different threads
-            if (this.RecText.InvokeRequired)
-            {   
-                //如果需要Invoke
-                //設定CallBack,Invoke
-                addmysqlCallback d = new addmysqlCallback(addmysql);
-                this.Invoke(d, new object[] { topic, msg });
-            }
-            else
-            {
-                //若不需要Invoke直接新增至MySQL
-				
-                //新增資料至主題對應的資料表
-                insert(connection, topic, msg);
+	// we need this construction because the receiving code in the library and the UI with textbox run on different threads
+	SetText(ReceivedMessage);
 
-                //查詢主題對應的資料表
-                SelectMySQL(connection, topic, (DataGridView)this.Controls.Find(topic + "_dataGridView", true)[0]); 
-            }
-        }
+	//===NEW===
+	string ReceivedTopic = e.Topic.ToLower();//收到的主題轉成小寫
+	// we need this construction because the receiving code in the library and the UI with DataGridView run on different threads
+	//將主題與訊息寫進datagridview框內，但因為MQTT接收的執行緒與UI執行緒不同，我們需要呼叫自訂的UpdateDataGridView函式做些處理
+	UpdateDataGridView(ReceivedTopic, ReceivedMessage);
+	//===NEW===
+
+}
 </code></pre>
 					</li>
 					
-					<li>當關閉程式時中斷連線
+					<li><新增>當關閉程式時與Mysql中斷連線
 <pre><code data-language="csharp">//當視窗關閉時
 private void Form1_FormClosing(object sender, FormClosingEventArgs e)
 {
-    client.Disconnect();//中斷連線
-    connection.Close(); //與MySQL的log資料庫斷線
-    test_connection.Close();//與MySQL的test_log資料庫斷線
-}</code></pre></li>
+	client.Disconnect();//與MQTTServer(mosquitto) 中斷連線
+	//===NEW===
+	connection.Close(); //與MySQL 中斷連線
+	//===NEW===
+}</code></pre>
+				</li>
+				<li>參考影片
+				…
+				</li>
+
+
 				</ul>
 			
 				
