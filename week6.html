@@ -158,7 +158,7 @@ private void UpdateDataGridView(string topic, string message)
 }
 </code></pre>
 					</li>
-					<li><新增>當收到主題後的對應動作 (以 <a href="./week2.html">第二週</a> 的程式新增以下幾行)<br/>
+					<li><修改>當收到主題後的對應動作 (以 <a href="./week2.html">第二週</a> 的程式新增以下幾行)<br/>
 <pre><code data-language="csharp">// this code runs when a message was received
 void client_MqttMsgPublishReceived(object sender, MqttMsgPublishEventArgs e)
 {
@@ -178,7 +178,7 @@ void client_MqttMsgPublishReceived(object sender, MqttMsgPublishEventArgs e)
 </code></pre>
 					</li>
 					
-					<li><新增>當關閉程式時與Mysql中斷連線
+					<li><修改>當關閉程式時與Mysql中斷連線
 <pre><code data-language="csharp">//當視窗關閉時
 private void Form1_FormClosing(object sender, FormClosingEventArgs e)
 {
@@ -187,6 +187,12 @@ private void Form1_FormClosing(object sender, FormClosingEventArgs e)
 	connection.Close(); //與MySQL 中斷連線
 	//===NEW===
 }</code></pre>
+				</li>
+				<li>注意有坑
+					<ol>
+						<li>Mysql的帳號密碼</li>
+						<li>元件名稱</li>
+					</ol>
 				</li>
 				<li>參考影片
 				…
