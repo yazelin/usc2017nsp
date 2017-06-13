@@ -72,6 +72,15 @@ using MySql.Data.MySqlClient;
 				
 				<h3>Server程式設計</h3>
 				<ul>
+					<li>Server程式步驟
+						<ol>
+							<li>與mosquitto連線(第二週) + 與MySQL連線(本週)</li>
+							<li>向mosquitto訂閱主題(第二週)</li>
+							<li>接收到主題與訊息時顯示於文字框(第二週) + 將資料存入MySQL及顯示於DataGridView中(本週)</li>
+							<li>向MySQL新增、查詢資料(本週)</li>
+							<li>當程式結束時與mosquitto中斷連線(第二週) + 與MySQL中斷連線(本週)</li>
+						</ol>
+					</li>
 					<li><修改>連結MySQL資料庫 (請參考 <a href="./week5.html">第五週</a> 程式做以下修改)<br/>
 <pre><code data-language="csharp">//在public partial class Form1 : Form { } 中加入下面2個宣告
 delegate void UpdateDataGridViewCallback(string topic, string msg);//用來更新新增至MySQL的Callback
